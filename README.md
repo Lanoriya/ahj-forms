@@ -1,1 +1,1 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/6guh9tmha0ht65xn?svg=true)](https://ci.appveyor.com/project/Lanoriya/ahj-testing)
+[![Build status](https://ci.appveyor.com/api/projects/status/54q1sgpeuumvf7vh?svg=true)](https://ci.appveyor.com/project/Lanoriya/ahj-forms)

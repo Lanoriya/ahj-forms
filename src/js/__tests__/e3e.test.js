@@ -1,4 +1,4 @@
-const puppeteer = require('puppeteer');
+import puppeteer from 'puppeteer';
 
 describe('check container', () => {
   let browser;
@@ -10,6 +10,7 @@ describe('check container', () => {
       slowMo: 100,
       devtools: true,
     });
+
     page = await browser.newPage();
     await page.goto('http://localhost:8080');
   });

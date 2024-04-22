@@ -12,27 +12,26 @@ describe("test check", () => {
   beforeAll(async () => {
     server = fork(`${__dirname}/e2e.server.js`);
     await new Promise((resolve, reject) => {
-        if(server.connected) {
-            process.send('ok');
-            resolve()
-        } else {
-            reject();
-        }
+      if (server.connected) {
+        process.send("ok");
+        resolve();
+      } else {
+        reject();
+      }
     });
 
     browser = await puppetteer.launch({
-    //   headless: false, // show gui
-    //   slowMo: 200,
-    //   devtools: false, // show devTools
-    //   // args: [`--window-size=1000,1000`],
-    //   defaultViewport: {
-    //     width: 1000,
-    //     height: 1000,
-    //   },
+      //   headless: false, // show gui
+      //   slowMo: 200,
+      //   devtools: false, // show devTools
+      //   // args: [`--window-size=1000,1000`],
+      //   defaultViewport: {
+      //     width: 1000,
+      //     height: 1000,
+      //   },
     });
 
     page = await browser.newPage();
-    
   });
 
   afterAll(async () => {

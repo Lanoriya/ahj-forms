@@ -4,19 +4,17 @@ import jest from "eslint-plugin-jest";
 import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
 
 export default [
+  // Общие правила для всех файлов JavaScript
   {
+    files: ["*.js"],
     languageOptions: { globals: { ...globals.browser, ...globals.node } },
-  },
-  pluginJs.configs.recommended,
-  eslintPluginPrettierRecommended,
-  {
+    ...pluginJs.configs.recommended,
+    ...eslintPluginPrettierRecommended,
     rules: {
       "no-unused-vars": "warn",
     },
   },
-  {
-    ignores: ["dist/*"],
-  },
+  // Правила для тестовых файлов
   {
     files: ["**/*.test.js"],
     ...jest.configs["flat/recommended"],

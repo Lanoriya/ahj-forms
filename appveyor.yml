@@ -1,7 +1,6 @@
 image: Ubuntu2204
 
-environment:
-  nodejs_version: "20"
+stack: node 20
 
 branches:
   only:

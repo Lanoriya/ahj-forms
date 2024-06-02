@@ -16,9 +16,11 @@ install:
 build: off
 
 build_script:
+  - npm run build
+
+test_script:
   - npm run lint
   - npm run e2e
-  - npm run build
 
 deploy_script:
   - git config --global credential.helper store

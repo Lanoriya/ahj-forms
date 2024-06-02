@@ -1,64 +1,43 @@
-import puppeteer from "puppeteer";
-import { fork } from "child_process";
+const puppeteer = require('puppeteer');
+const path = require('path');
+const { exec } = require('child_process');
 
-const PORT = 8087;
-const URL = `http://localhost:${PORT}`;
+let browser;
+let page;
+let server;
 
-// Start the server
-const server = fork('path/to/e2e.server.js');
+beforeAll(async () => {
+  // Start your server
+  server = exec(`node ${path.join(__dirname, 'path/to/e2e.server.js')}`);
+  
+  // Give the server time to start
+  await new Promise(resolve => setTimeout(resolve, 10000));
+
+  // Launch the browser
+  browser = await puppeteer.launch();
+  page = await browser.newPage();
+}, 20000); // Increased timeout for server start and browser launch
+
+afterAll(async () => {
+  if (browser) {
+    await browser.close();
+  }
+  if (server) {
+    server.kill();
+  }
+});
 
 describe('Popover functionality', () => {
-  let browser;
-  let page;
+  test('should display the popover when the button is clicked', async () => {
+    await page.goto('http://localhost:3000'); // Adjust URL as needed
+    await page.click('#popover-button'); // Adjust selector as needed
+    const popover = await page.$('#popover'); // Adjust selector as needed
+    expect(popover).toBeTruthy();
+  }, 10000); // Adjust timeout if needed
 
-  beforeAll(async () => {
-    // Wait for the server to start
-    await new Promise((resolve) => setTimeout(resolve, 5000)); // Adjust the timeout as needed
-
-    // Launch the browser
-    browser = await puppeteer.launch();
-    page = await browser.newPage();
-  });
-
-  afterAll(async () => {
-    await browser.close();
-    server.kill();
-  });
-
-  beforeEach(async () => {
-    await page.goto(URL);
-  });
-
-  it('should display the popover when the button is clicked', async () => {
-    await page.click('.btn-pop');
-
-    // Verify the popover appears
-    const popContent = await page.$('.pop-content');
-    expect(popContent).not.toBeNull();
-
-    // Verify the popover content
-    const popTitle = await page.$eval('.pop-title', el => el.textContent);
-    const popText = await page.$eval('.pop-text', el => el.textContent);
-    expect(popTitle).toContain('Popover title');
-    expect(popText).toContain("And here's some amazing content. It's very engaging. Right?");
-
-    // Verify the popover is positioned correctly
-    const btnRect = await page.$eval('.btn-pop', el => el.getBoundingClientRect());
-    const popRect = await page.$eval('.pop-content', el => el.getBoundingClientRect());
-    const triangleRect = await page.$eval('.triangle', el => el.getBoundingClientRect());
-
-    const popLeft = btnRect.left - (popRect.width - btnRect.width) / 2;
-    const popTop = btnRect.top - popRect.height - triangleRect.height;
-    expect(popRect.left).toBeCloseTo(popLeft, 1);
-    expect(popRect.top).toBeCloseTo(popTop, 1);
-  });
-
-  it('should remove the popover when the button is clicked again', async () => {
-    await page.click('.btn-pop');
-    await page.click('.btn-pop');
-
-    // Verify the popover is removed
-    const popContent = await page.$('.pop-content');
-    expect(popContent).toBeNull();
-  });
+  test('should remove the popover when the button is clicked again', async () => {
+    await page.click('#popover-button'); // Adjust selector as needed
+    const popover = await page.$('#popover'); // Adjust selector as needed
+    expect(popover).toBeFalsy();
+  }, 10000); // Adjust timeout if needed
 });

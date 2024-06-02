@@ -1,15 +1,12 @@
-const Webpack = require("webpack");
-const WebpackDevServer = require("webpack-dev-server");
-const config = require("../webpack.dev");
-const PORT = 8087;
+const webpack = require('webpack');
+const WebpackDevServer = require('webpack-dev-server');
+const config = require('../webpack.config.js');
 
-const compiler = Webpack(config);
-const devServerOptions = { ...config.devServer, open: false, port: PORT };
-const server = new WebpackDevServer(devServerOptions, compiler);
+const server = new WebpackDevServer(config.devServer, webpack(config));
 
-const runServer = async () => {
-  console.log("Starting server on port " + PORT);
-  await server.start();
-};
-
-runServer();
+server.startCallback(() => {
+  console.log('Starting server on port 8087');
+  if (process.send) {
+    process.send('ok');
+  }
+});

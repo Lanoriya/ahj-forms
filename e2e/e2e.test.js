@@ -11,6 +11,7 @@ describe("Popover functionality", () => {
 
   beforeAll(async () => {
     server = fork(`${__dirname}/e2e.server.js`);
+    
     await new Promise((resolve, reject) => {
       server.on('message', (message) => {
         if (message === 'ok') {
@@ -22,7 +23,7 @@ describe("Popover functionality", () => {
     });
 
     browser = await puppeteer.launch({
-      headless: false, // set to true if you do not need GUI
+      headless: true, // set to false if you need GUI
       slowMo: 50, // add delay to better observe tests
       devtools: false, // set to true if you need devTools
       defaultViewport: {
@@ -35,8 +36,12 @@ describe("Popover functionality", () => {
   });
 
   afterAll(async () => {
-    await browser.close();
-    server.kill();
+    if (browser) {
+      await browser.close();
+    }
+    if (server) {
+      server.kill();
+    }
   });
 
   test("should display the popover when the button is clicked", async () => {

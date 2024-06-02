@@ -7,7 +7,7 @@ describe("Popover functionality", () => {
   let browser = null;
   let page = null;
   let server = null;
-  const baseUrl = "http://localhost:8087"; // adjust to your actual server URL
+  const baseUrl = "http://localhost:8080"; // adjust to your actual server URL
 
   beforeAll(async () => {
     server = fork(`${__dirname}/e2e.server.js`);
